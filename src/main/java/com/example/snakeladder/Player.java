@@ -1,7 +1,9 @@
 package com.example.snakeladder;
 
+import javafx.animation.TranslateTransition;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.util.Duration;
 
 public class Player {
     private Circle coin;
@@ -19,6 +21,42 @@ public class Player {
         coin.setTranslateY(380);
     }
 
+    public void movePlayer(int diceValue){
+        if(coinPosition + diceValue <= 100){
+            coinPosition += diceValue;
+//            coin.setTranslateX(gameboard.getXCoordinate(coinPosition));
+//            coin.setTranslateY(gameboard.getYCoordinate(coinPosition));
+            translatePlayer();
+            int newPosition = gameboard.getNextPosition(coinPosition);
+            if (newPosition != coinPosition){
+                coinPosition = newPosition;
+                translatePlayer();
+            }
+        }
+
+    }
+
+    private void translatePlayer(){
+        TranslateTransition move = new TranslateTransition(Duration.millis(1000), this.coin);
+        move.setToX(gameboard.getXCoordinate(coinPosition));
+        move.setToY(gameboard.getYCoordinate(coinPosition));
+        move.setAutoReverse(false);
+        move.play();
+
+    }
+
+    public String playerWon(){
+        if (coinPosition == 100){
+            return name + " Won The Game";
+        }
+
+        return null;
+    }
+
+    public void resetPlayer(){
+        coin.setTranslateX(20);
+        coin.setTranslateY(380);
+    }
     public Circle getCoin() {
         return coin;
     }
